@@ -1,0 +1,27 @@
+# Ignore large raw data files — these should NOT be committed to git.
+# Teammates should download the dataset directly from PhysioNet.
+*.edf
+*.rec
+
+# Processed numpy arrays — also large, not committed
+data/*.npy
+
+# Saved model checkpoints
+results/*.pt
+results/*.pth
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# macOS
+.DS_Store
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
