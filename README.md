@@ -27,42 +27,6 @@ Final Project/
 
 ---
 
-## Setup
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## How to Run
-
-### Step 1 — Preprocess the raw data (run once)
-```bash
-python preprocess.py
-```
-This reads all 153 EDF recordings, filters and normalizes the signals, segments them
-into 30-second epochs, and saves `.npy` files to `data/`. Takes ~10–20 minutes.
-
-### Step 2 — Train a model
-```bash
-# Train baseline CNN on all three signals
-python train.py --model cnn --signals eeg_eog_emg
-
-# Train CNN on EEG only (Experiment A1)
-python train.py --model cnn --signals eeg
-
-# Train CNN+LSTM (Experiment B)
-python train.py --model cnn_lstm --signals eeg_eog_emg
-```
-
-### Step 3 — Evaluate and generate figures
-```bash
-python evaluate.py --checkpoint results/best_cnn_eeg_eog_emg.pt --signals eeg_eog_emg
-```
-
----
-
 ## Experiments
 
 | Exp | Architecture | Signals       | Purpose                            |
