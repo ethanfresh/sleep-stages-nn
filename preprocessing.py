@@ -36,9 +36,9 @@ def load_recording(psg_path, hyp_path):
   data[1] = bandpass(data[1], 0.5, 8)
   data[2] = bandpass(data[2], 10, 49)
 
-  annotations = mne.read_annotations(hyp_path)
+  hpy = mne.io.read_raw_edf(hyp_path, preload = True, verbose = False)
   epochs, labels = [], []
-  for ann in annotations:
+  for ann in hpy.annotations:
     if ann["description"] not in STAGE_MAP:
       continue
     onset = int(ann["onset"] * SR)
@@ -52,7 +52,7 @@ def load_recording(psg_path, hyp_path):
 
 def main():
   os.makedirs(OUT_DIR, exist_ok = True)
-  psg_files = sorted(glob.glob(os.path.join(DATA_DIR, "*-PSG.edf")))
+  psg_files = sorted(glob.glob(os.path.join(DATA_DIR, "*.PSG.edf")))
 
   subjects = {}
   for psg in psg_files:
@@ -62,11 +62,9 @@ def main():
   for subject_id, psgs in subjects.items():
     all_epochs, all_labels = [], []
     for psg_path in psgs:
-      subject_prefix = os.path.basename(psg_path)[:6]
-      hyp_matches = glob.glob(os.path.join(DATA_DIR, f"{subject_prefix}*Hypnogram.edf"))
-      if not hyp_matches:
+      hyp_path = psg_path.replace("PSG.edf", "Hypnogram.edf")
+      if not os.path.exists(hyp_path):
         continue
-      hyp_path = hyp_matches[0]
       epochs, labels = load_recording(psg_path, hyp_path)
       all_epochs.append(epochs)
       all_labels.append(labels)

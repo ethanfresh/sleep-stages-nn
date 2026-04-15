@@ -3,8 +3,6 @@ import glob
 import numpy as np
 from torch.utils.data import Dataset
 
-
-
 class SleepDataset(Dataset):
   def __init__(self, data_dir, subject_ids=None):
     self.samples = []
@@ -27,4 +25,6 @@ class SleepDataset(Dataset):
 
   def __getitem__(self, idx):
     epoch, label = self.samples[idx]
-    return epoch.astype(np.float32), int(label)
+    epoch = epoch.astype(np.float32)
+    epoch = (epoch - epoch.mean(axis=1, keepdims=True)) / (epoch.std(axis=1, keepdims=True) + 1e-8)
+    return epoch, int(label)
