@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# Editor / IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Project-specific
+pyrightconfig.json
+data/
+*.pt
+sleep-edf-database-expanded-1.0.0/
