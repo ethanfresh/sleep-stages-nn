@@ -4,28 +4,25 @@
 Classifies human sleep stages (Wake, N1, N2, N3, REM) from physiological signals
 (EEG, EOG, EMG) using a 1D CNN baseline and a CNN+LSTM sequence model.
 
----
-
 ## Project Structure
 
 ```
 Final Project/
-├── sleep-edf-database-expanded-1.0.0/   ← raw data
+├── sleep-edf-database-expanded-1.0.0/   ← Raw data
 │   └── sleep-cassette/
-├── data/                                 ← processed .npy files (created by preprocess.py)
+├── data/                                 ← Processed .npy files (created by preprocess.py)
 ├── models/
 │   ├── cnn.py                            ← 1D CNN baseline
 │   └── cnn_lstm.py                       ← CNN + LSTM sequence model
-├── results/                              ← saved model checkpoints and figures
-├── preprocess.py                         ← Step 1: convert raw EDF → .npy arrays
+├── results/                              ← Saved model checkpoints and figures
+├── preprocessing.py                      ← Step 1: Convert raw EDF → .npy arrays
 ├── dataset.py                            ← PyTorch Dataset wrapper
-├── train.py                              ← Step 2: train a model
-├── evaluate.py                           ← Step 3: generate metrics and plots
+├── train.py                              ← Step 2: Used for training models
+├── evaluate.py                           ← Step 3: Generate metrics and plots
+├── results.md                            ← Stored best results from train/val
 ├── requirements.txt
 └── README.md
 ```
-
----
 
 ## Setup
 
@@ -33,35 +30,35 @@ Final Project/
 pip install -r requirements.txt
 ```
 
----
-
 ## How to Run
 
 ### Step 1 — Preprocess the raw data (run once)
 ```bash
-python preprocess.py
+python3 preprocessing.py
 ```
 This reads all 153 EDF recordings, filters and normalizes the signals, segments them
 into 30-second epochs, and saves `.npy` files to `data/`. Takes ~10–20 minutes.
 
 ### Step 2 — Train a model
 ```bash
-# Train baseline CNN on all three signals
-python train.py --model cnn --signals eeg_eog_emg
+# Train baseline CNN on all three signals (Experiment A3)
+python3 train.py --model cnn --channels eeg eog emg
 
 # Train CNN on EEG only (Experiment A1)
-python train.py --model cnn --signals eeg
+python3 train.py --model cnn --channels eeg
+
+# Train CNN on EEG + EOG (Experiment A2)
+python3 train.py --model cnn --channels eeg eog
 
 # Train CNN+LSTM (Experiment B)
-python train.py --model cnn_lstm --signals eeg_eog_emg
+python3 train.py --model cnn_lstm --channels eeg eog emg
 ```
 
 ### Step 3 — Evaluate and generate figures
 ```bash
-python evaluate.py --checkpoint results/best_cnn_eeg_eog_emg.pt --signals eeg_eog_emg
+python3 evaluate.py --model cnn --channels eeg eog emg
+python3 evaluate.py --model cnn_lstm --channels eeg eog emg
 ```
-
----
 
 ## Experiments
 
@@ -72,7 +69,6 @@ python evaluate.py --checkpoint results/best_cnn_eeg_eog_emg.pt --signals eeg_eo
 | A3  | CNN         | EEG+EOG+EMG   | Does muscle data help further?     |
 | B   | CNN+LSTM    | Best from A   | Does temporal context help?        |
 
----
 
 ## Attribution
 - EDF loading: MNE-Python library
