@@ -3,9 +3,16 @@ import glob
 import numpy as np
 from torch.utils.data import Dataset
 
+CHANNEL_MAP = {
+  "eeg" : 0,
+  "eog" : 1,
+  "emg" : 2,
+}
+
 class SleepDataset(Dataset):
-  def __init__(self, data_dir, subject_ids=None):
+  def __init__(self, data_dir, subject_ids = None, channels = None):
     self.samples = []
+    self.channel_indices = [CHANNEL_MAP[c] for c in channels] if channels else [0,1,2]
 
     pattern = os.path.join(data_dir, "*_X.npy")
     x_files = sorted(glob.glob(pattern))
@@ -14,7 +21,7 @@ class SleepDataset(Dataset):
       subject_id = os.path.basename(x_path)[:6]
       if subject_ids is not None and subject_id not in subject_ids:
         continue
-      y_path = x_path.replace("_X.npy", "_Y.npy")
+      y_path = x_path.replace("_X.npy", "_y.npy")
       X = np.load(x_path)
       y = np.load(y_path)
       for epoch, label in zip(X, y):
@@ -25,6 +32,6 @@ class SleepDataset(Dataset):
 
   def __getitem__(self, idx):
     epoch, label = self.samples[idx]
-    epoch = epoch.astype(np.float32)
-    epoch = (epoch - epoch.mean(axis=1, keepdims=True)) / (epoch.std(axis=1, keepdims=True) + 1e-8)
+    epoch = epoch[self.channel_indices].astype(np.float32)
+    epoch = (epoch - epoch.mean(axis=1, keepdims=True)) / (epoch.std(axis = 1, keepdims = True) + 1e-8)
     return epoch, int(label)
