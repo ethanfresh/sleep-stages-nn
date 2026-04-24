@@ -37,7 +37,7 @@ pip install -r requirements.txt
 python3 preprocessing.py
 ```
 This reads all 153 EDF recordings, filters and normalizes the signals, segments them
-into 30-second epochs, and saves `.npy` files to `data/`. Takes ~10–20 minutes.
+into 30-second epochs, and saves `.npy` files to `data/`.
 
 ### Step 2 — Train a model
 ```bash
