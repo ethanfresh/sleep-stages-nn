@@ -67,7 +67,7 @@ python3 evaluate.py --model cnn_lstm --channels eeg eog emg
 | A1  | CNN         | EEG only      | Signal ablation baseline           |
 | A2  | CNN         | EEG + EOG     | Does eye movement data help?       |
 | A3  | CNN         | EEG+EOG+EMG   | Does muscle data help further?     |
-| B   | CNN+LSTM    | Best from A   | Does temporal context help?        |
+| B   | CNN+LSTM    | EEG+EOG+EMG   | Does temporal context help?        |
 
 
 ## Attribution
